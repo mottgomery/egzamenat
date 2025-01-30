@@ -14,9 +14,15 @@ from pytz import timezone
 
 app = Flask(__name__)
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///local.db")
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("❌ Ошибка! DATABASE_URL не найден!")
+
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+print(f"✅ Используем БД: {DATABASE_URL}")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
